@@ -1,0 +1,14 @@
+{
+  "python.pythonPath": "",
+  "editor.formatOnSave": true,
+  "python.linting.flake8Enabled": true,
+  "python.linting.flake8Args": [
+    "--ignore=F403,F401,E501,I201"
+  ],
+  "files.exclude": {
+    "**/*.pyc": true,
+    "**/.mypy_cache": true,
+    "**/.pytest_cache": true,
+    "**/__pycache__": true
+  }
+}

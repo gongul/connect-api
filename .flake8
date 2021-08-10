@@ -1,0 +1,16 @@
+[flake8]
+ignore = F403,F401,E501,I201,W503
+exclude =
+    src/env/
+    *.log
+    __pycache__
+    *.pyc
+    *~
+    *.sqlite3
+    *.stackdump
+    .static_root/
+    .media_root/
+    *.whl
+    .mypy_cache
+    src/env/migrations/*
+max-complexity = 10

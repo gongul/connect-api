@@ -1,0 +1,7 @@
+[client]
+host = 127.0.0.1
+database = database
+user = user
+password = password
+default-character-set = utf8mb4
+port = 3306

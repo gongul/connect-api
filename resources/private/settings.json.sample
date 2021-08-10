@@ -1,0 +1,10 @@
+{
+    "SECRET_KEY": "",
+    "EMAIL": {
+        "HOST": "",
+        "PORT": "",
+        "HOST_USER": "",
+        "HOST_PASSWORD": "",
+        "USER_TLS": true
+    }
+}

@@ -1,0 +1,41 @@
+# env
+env/
+
+# log file 
+*.log
+__pycache__
+*.pyc
+*~
+
+# database config file
+*.sqlite3
+
+# vscode
+.vscode/launch.json
+.vscode/settings.json
+*.stackdump
+
+# static file 
+.static/
+
+# media file
+.media/
+
+# pip 
+*.whl
+
+# mypy
+.mypy_cache
+
+# pytest
+.pytest_cache
+
+# settings
+resource/private/settings.json
+
+# database
+mysql_development.cnf
+mysql_production.cnf
+
+# test code
+local-test
