@@ -1,3 +1,4 @@
+from .base import *
 from .base import DATABASE_SETTING_DIR, os
 
 ALLOWED_HOSTS = ["*"]
