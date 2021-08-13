@@ -6,9 +6,10 @@ from rest_framework import exceptions
 from rest_framework_miem.serializers import InheritsModelSerializer
 
 from common.utils import EmailThread
+from common.views import ActionEnum
 from user.validator.message import UserValidationMessage
 
-from .models import User
+from .models import Friend, User
 
 from random import random
 
@@ -60,6 +61,78 @@ class UserSerializer(InheritsModelSerializer):
         read_only_fields = ['registration_date', 'email']
         extra_kwargs = {
             'password': {'write_only': True},
+        }
+
+
+class FriendSerializer(InheritsModelSerializer):
+    # not required : request_date accept_date
+    # def get_fields(self):
+    #     fields = super().get_fields()
+
+    #     if self.context == {}:
+    #         return fields
+
+    #     action = self.context['view'].action
+    #     request = self.context['request']
+
+    #     # fields['request_date'].read_only = True
+    #     # fields['accept_date'].read_only = True
+
+    #     # if not request.user.is_staff and action == ActionEnum.CREATE.value:
+    #     #     fields['is_friend'].read_only = True
+    #     # elif not request.user.is_staff and action in [ActionEnum.UPDATE.value, ActionEnum.PARTIAL_UPDATE.value]:
+    #     #     fields['friend_user'].read_only = True
+
+    #     return fields
+
+    def validate_is_friend(self, value):
+        request_user = self.context['request'].user
+
+        if not request_user.is_staff and value != request_user:
+            raise exceptions.PermissionDenied({'is_friend': [exceptions.PermissionDenied.default_detail]})
+        elif value == request_user and value == 0:
+            raise exceptions.PermissionDenied({'is_friend': [exceptions.PermissionDenied.default_detail]})
+
+        return value
+
+    def validate_request_date(self, value):
+        if not self.context['request'].user.is_staff:
+            raise exceptions.PermissionDenied({'request_date': [exceptions.PermissionDenied.default_detail]})
+
+        return value
+
+    def validate_accept_date(self, value):
+        if not self.context['request'].user.is_staff:
+            raise exceptions.PermissionDenied({'accept_date': [exceptions.PermissionDenied.default_detail]})
+
+        return value
+
+    def validate_friend_user(self, value):
+        action = self.context['view'].action
+
+        if not self.context['request'].user.is_staff and action in [ActionEnum.UPDATE.value, ActionEnum.PARTIAL_UPDATE.value]:
+            raise exceptions.PermissionDenied({'friend_user': [exceptions.PermissionDenied.default_detail]})
+
+        return value
+
+    def validate(self, attrs):
+        action = self.context['view'].action
+        request_user = self.context['request'].user
+
+        if action == ActionEnum.CREATE.value:
+            attrs['user'] = request_user
+
+        return attrs
+
+    class Meta:
+        model = Friend
+        fields = '__all__'
+        read_only_fields = ['user']
+        extra_kwargs = {
+            'request_date': {'required': False},
+            'accept_date': {'required': False},
+            'is_friend': {'required': False},
+            'friend_user': {'required': False},
         }
 
 

@@ -15,6 +15,7 @@ auth_router.register(r'auth', JwtTokenViewSet, basename='auth')
 router = routers.SimpleRouter(trailing_slash=False)
 
 router.register(r'users', views.UserViewSet)
+router.register(r'friends', views.FriendViewSet)
 
 user_patterns = ([
     path('', include(auth_router.urls)),

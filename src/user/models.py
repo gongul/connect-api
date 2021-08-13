@@ -47,8 +47,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Friend(models.Model):
-    user_id = models.ForeignKey(User, related_name='user_friends', on_delete=CASCADE)
-    friend_user_id = models.ForeignKey(User, related_name='friend_user_friends', on_delete=CASCADE)
-    is_frined = models.BooleanField('친구 여부')
-    request_date = models.DateTimeField('친구 요청일', auto_now_add=True, error_messages=UserValidationMessage.PASSWORD.to_dict())
+    user = models.ForeignKey(User, related_name='user_friends', on_delete=CASCADE)
+    friend_user = models.ForeignKey(User, related_name='friend_user_friends', on_delete=CASCADE)
+    is_friend = models.BooleanField('친구 여부', default=False)
+    request_date = models.DateTimeField('친구 요청일', default=timezone.now, error_messages=UserValidationMessage.PASSWORD.to_dict())
     accept_date = models.DateTimeField('친구 수락일', blank=True, null=True, error_messages=UserValidationMessage.PASSWORD.to_dict())

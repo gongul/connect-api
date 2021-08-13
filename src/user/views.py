@@ -7,11 +7,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 from common.filters import CustomOrderingFilterBackends
 
 from common.permissions import IsAdminUser
-from user.filters import UserFilter
-from user.permissions import IsUserOwner
+from user.filters import FriendFilter, UserFilter
+from user.permissions import IsFriendOwner, IsUserOwner
 
-from .models import User
-from .serializers import ActivateSerializer, SignupSerializer, UserSerializer
+from .models import Friend, User
+from .serializers import ActivateSerializer, FriendSerializer, SignupSerializer, UserSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -32,6 +32,16 @@ class UserViewSet(viewsets.ModelViewSet):
         super().update(request, *args, **kwargs)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class FriendViewSet(viewsets.ModelViewSet):
+    queryset = Friend.objects.select_related('user', 'friend_user')
+    serializer_class = FriendSerializer
+    default_limit = 50
+    filter_backends = [DjangoFilterBackend, CustomOrderingFilterBackends]
+    ordering_fields = ['id', 'request_date']
+    permission_classes = [IsFriendOwner | IsAdminUser]
+    filter_class = FriendFilter
 
 
 class SignupView(mixins.CreateModelMixin, generics.GenericAPIView):
