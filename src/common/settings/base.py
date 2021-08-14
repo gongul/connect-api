@@ -65,7 +65,6 @@ LOGGING = {
         'production-console': {
             'level': 'WARNING',
             'class': 'logging.StreamHandler',
-            'filters': ['require_debug_false'],
             'formatter': 'default'
         },
         'console': {
@@ -80,11 +79,11 @@ LOGGING = {
             'propagate': False
         },
         'django': {
-            'handlers': ['production-console', 'console'],
+            'handlers': ['console'],
             'level': 'DEBUG'
         },
         'connect': {
-            'handlers': ['production-console', 'console'],
+            'handlers': ['production-console'],
             'level': 'DEBUG'
         }
     }
