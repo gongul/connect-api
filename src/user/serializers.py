@@ -6,7 +6,7 @@ from rest_framework import exceptions
 from rest_framework_miem.serializers import InheritsModelSerializer
 
 from common.utils import EmailThread
-from common.views import ActionEnum
+from common.enums import ActionEnum
 from user.validator.message import UserValidationMessage
 
 from .models import Friend, User

@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from common.enums import ActionEnum
 
 from common.permissions import OwnerSafeAction
 
@@ -18,10 +19,10 @@ class IsUserOwner(permissions.BasePermission):
 class IsFriendOwner(permissions.BasePermission):
 
     def has_permission(self, request, view):
-        if view.action in OwnerSafeAction:
-            return bool(request.user.is_authenticated)
+        if view.action == ActionEnum.DELETE.value:
+            return False
 
-        return False
+        return True
 
     def has_object_permission(self, request, view, obj):
         return obj.user.email == request.user.email

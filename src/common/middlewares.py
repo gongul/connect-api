@@ -42,20 +42,20 @@ def exception_format(exc):
 def _drf_exception_format(exc, error_list):
     codes = exc.get_codes()
 
-    if isinstance(exc.detail, dict):  # 검증 에러가 필드에서 발생할 때
+    if isinstance(exc.detail, dict):
         for key, value in exc.detail.items():
-            if isinstance(value, dict):  # ForeignKey 에서 에러가 나면 한번 더 감싸서 에러가 발생한다.
+            if isinstance(value, dict):  # 계층 구조일 경우
                 for child_key, child_value in value.items():
                     error = ErrorCollection(key, child_value[0], codes[key][child_key][0])
                     error_list.append(vars(error))
             else:
                 error = ErrorCollection(key, value[0], codes[key][0])
                 error_list.append(vars(error))
-    elif isinstance(exc.detail, list):  # 검증 에러가 필드 외에서 발생할 때
+    elif isinstance(exc.detail, list):
         for i in range(0, len(exc.detail)):
             error = ErrorCollection('non_field', exc.detail[i], codes[i])
             error_list.append(vars(error))
-    else:  # 검증 에러가 필드 외 단일 에러일 때
+    else:
         error = ErrorCollection('non_field', exc.detail, codes)
         error_list.append(vars(error))
 
@@ -65,7 +65,7 @@ def _not_drf_exception_format(exc, error_list):
 
     if isinstance(exc, OperationalError) and exc.args[0] == 1040:  # max connection 에러
         error = ErrorCollection('non_field', '요청이 너무 많습니다.', 'server_error')
-    elif isinstance(exc, Http404):  # 404 에러 리소스가 없을 때 참고 https://stackoverflow.com/questions/3821663/querystring-in-rest-resource-url/3822676#3822676
+    elif isinstance(exc, Http404):  # 리소스가 없을 때
         error = ErrorCollection('non_field', '리소스를 찾을 수 없습니다.', 'not_found')
 
     error_list.append(vars(error))

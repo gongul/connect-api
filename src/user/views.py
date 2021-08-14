@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.db.models import Q
 from drf_spectacular.utils import extend_schema
 from rest_framework import generics, mixins, status, viewsets
 from rest_framework.response import Response
@@ -42,6 +43,14 @@ class FriendViewSet(viewsets.ModelViewSet):
     ordering_fields = ['id', 'request_date']
     permission_classes = [IsFriendOwner | IsAdminUser]
     filter_class = FriendFilter
+
+    @extend_schema(operation_id='friends_my_friends', description='내 친구목록을 보여준다.')
+    @action(url_name='my-friends', url_path='my-friends', detail=False, methods=['GET'])
+    def my_friends(self, request, *args, **kwargs):
+        self.filter_class = None
+        self.queryset = self.queryset.filter(Q(user=self.request.user) | Q(friend_user=self.request.user))
+
+        return super().list(request, *args, **kwargs)
 
 
 class SignupView(mixins.CreateModelMixin, generics.GenericAPIView):
